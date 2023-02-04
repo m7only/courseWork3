@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class ExceptionHandlerController {
-    private final String NOT_VALID_PARAMETERS = "Not valid parameters.";
-    private final String INTERNAL_SERVER_ERROR = "Internal server error.";
+    private final String NOT_VALID_PARAMETERS = "Not valid parameters";
+    private final String INTERNAL_SERVER_ERROR = "Internal server error";
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> illegalArgumentException(IllegalArgumentException exception) {
