@@ -24,20 +24,17 @@ import java.util.Map;
 @Validated
 public class SockServiceImpl implements SockService {
 
-    private Map<Socks, Integer> socksWarehouse = new HashMap<>() {{
-        put(new Socks(Color.BLACK, Size.L, 90), 100);
-        put(new Socks(Color.BLACK, Size.L, 95), 99);
-        put(new Socks(Color.WHITE, Size.L, 90), 100);
-    }};
-
-    private List<SocksTransactions> socksTransactions = new LinkedList<>();
-
+    private final BackupService backupService;
     @Value("${warehouse.backup.file.name}")
     String warehouseFileName;
     @Value("${transactions.backup.file.name}")
     String transactionsFileName;
-
-    private final BackupService backupService;
+    private final Map<Socks, Integer> socksWarehouse = new HashMap<>() {{
+        put(new Socks(Color.BLACK, Size.L, 90), 100);
+        put(new Socks(Color.BLACK, Size.L, 95), 99);
+        put(new Socks(Color.WHITE, Size.L, 90), 100);
+    }};
+    private final List<SocksTransactions> socksTransactions = new LinkedList<>();
 
     public SockServiceImpl(BackupService backupService) {
         this.backupService = backupService;

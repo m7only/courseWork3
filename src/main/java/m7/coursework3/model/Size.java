@@ -8,6 +8,12 @@ public enum Size {
     XXL(31),
     XXXL(33);
 
+    private final int SIZE;
+
+    Size(int size) {
+        this.SIZE = size;
+    }
+
     public static Size getSizeByNum(int num) {
         return switch (num) {
             case 23 -> S;
@@ -18,12 +24,6 @@ public enum Size {
             case 33 -> XXXL;
             default -> throw new IllegalArgumentException();
         };
-    }
-
-    private final int SIZE;
-
-    Size(int size) {
-        this.SIZE = size;
     }
 
     public int getSize() {
