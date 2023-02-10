@@ -3,23 +3,36 @@ package m7.coursework3.services;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import m7.coursework3.exceptions.SocksNotExistException;
 import m7.coursework3.model.Socks;
+import m7.coursework3.model.SocksQuantityDTO;
+import m7.coursework3.model.TransactionType;
 
-import java.util.Map;
+import java.nio.file.Path;
+import java.util.List;
 
 
 public interface SockService {
-    Socks add(@Valid Socks socks, @NotNull @Min(1) Integer quantity); // post, приход
+    List<Socks> all();
 
-    Socks release(@Valid Socks socks, @NotNull @Min(1) Integer quantity);
+    Socks add(@Valid SocksQuantityDTO socksQuantityDTO); // post, приход
 
-    int getQuantityByCottonMin(@NotNull String color, @NotNull Integer size, @NotNull @Min(0) @Max(100) Integer cottonMin); // get, количество по > min
+    SocksQuantityDTO releaseSocks(@Valid SocksQuantityDTO socksQuantityDTO,
+                                  TransactionType transactionType);
 
-    int getQuantityByCottonMax(@NotNull String color, @NotNull Integer size, @NotNull @Min(0) @Max(100) Integer cottonMin); // get, количество < max
+    SocksQuantityDTO writeOff(@Valid SocksQuantityDTO socksQuantityDTO,
+                              TransactionType transactionType);
 
-    Socks delete(Socks socks, int quantity) throws SocksNotExistException; // delete, списание
+    int getQuantityByCottonMin(@NotBlank String color,
+                               @NotNull Integer size,
+                               @NotNull @Min(0) @Max(100) Integer cottonMin); // get, количество по > min
 
-    Map<Socks, Integer> all();
+    int getQuantityByCottonMax(@NotBlank String color,
+                               @NotNull Integer size,
+                               @NotNull @Min(0) @Max(100) Integer cottonMin); // get, количество < max
+
+    Path saveWarehouseBackup();
+
+    Path saveTransactionsBackup();
 }
