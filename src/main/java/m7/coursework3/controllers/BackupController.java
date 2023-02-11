@@ -9,9 +9,8 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -38,25 +37,41 @@ public class BackupController {
     @GetMapping("/warehouse")
     public ResponseEntity<InputStreamResource> getWarehouseBackup() throws IOException {
         Path path = sockService.saveWarehouseBackup();
-        return path == null
-                ? ResponseEntity.notFound().build()
-                : ResponseEntity.ok()
+        return path != null
+                ? ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .contentLength(Files.size(path))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + path.getFileName().toString())
-                .body(new InputStreamResource(Files.newInputStream(path)));
+                .body(new InputStreamResource(Files.newInputStream(path)))
+                : ResponseEntity.notFound().build();
+    }
+
+    @Operation(summary = "Загрузка данных по складу")
+    @PostMapping(value = "/warehouse", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> uploadWarehouseBackup(@RequestParam MultipartFile file) {
+        sockService.downloadWarehouseBackup(file);
+        return ResponseEntity.ok().build();
+
     }
 
     @Operation(summary = "Выгрузка текущих данных по транзакциям")
     @GetMapping("/transactions")
     public ResponseEntity<InputStreamResource> getTransactionsBackup() throws IOException {
         Path path = sockService.saveTransactionsBackup();
-        return path == null
-                ? ResponseEntity.notFound().build()
-                : ResponseEntity.ok()
+        return path != null
+                ? ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .contentLength(Files.size(path))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + path.getFileName().toString())
-                .body(new InputStreamResource(Files.newInputStream(path)));
+                .body(new InputStreamResource(Files.newInputStream(path)))
+                : ResponseEntity.notFound().build();
+    }
+
+    @Operation(summary = "Загрузка данных по транзакциям")
+    @PostMapping(value = "/transactions", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> uploadTransactionsBackup(@RequestParam MultipartFile file) {
+        sockService.downloadTransactionsBackup(file);
+        return ResponseEntity.ok().build();
+
     }
 }

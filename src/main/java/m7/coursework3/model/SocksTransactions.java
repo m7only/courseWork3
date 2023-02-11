@@ -1,11 +1,20 @@
 package m7.coursework3.model;
 
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-import java.time.LocalDateTime;
+//public record SocksTransactions(@NotNull TransactionType transactionType,
+//                                @NotNull String transactionDateTime,
+//                                @NotNull Socks socks,
+//                                @NotNull Integer quantity) {
+//}
 
-public record SocksTransactions(@NotNull TransactionType transactionType,
-                                @NotNull LocalDateTime transactionDateTime,
-                                @NotNull Socks socks,
-                                @NotNull Integer quantity) {
+@Data
+@AllArgsConstructor
+public class SocksTransactions {
+    @NotNull TransactionType transactionType;
+    @NotNull String transactionDateTime;
+    @NotNull Socks socks;
+    @NotNull Integer quantity;
 }

@@ -12,9 +12,11 @@ import m7.coursework3.services.SockService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,12 +31,10 @@ public class SockServiceImpl implements SockService {
     String warehouseFileName;
     @Value("${transactions.backup.file.name}")
     String transactionsFileName;
-    private final Map<Socks, Integer> socksWarehouse = new HashMap<>() {{
-        put(new Socks(Color.BLACK, Size.L, 90), 100);
-        put(new Socks(Color.BLACK, Size.L, 95), 99);
-        put(new Socks(Color.WHITE, Size.L, 90), 100);
-    }};
-    private final List<SocksTransactions> socksTransactions = new LinkedList<>();
+
+    private Map<Socks, Integer> socksWarehouse = new HashMap<>();
+
+    private List<SocksTransactions> socksTransactions = new LinkedList<>();
 
     public SockServiceImpl(BackupService backupService) {
         this.backupService = backupService;
@@ -48,29 +48,29 @@ public class SockServiceImpl implements SockService {
     @Override
     public Socks add(@Valid SocksQuantityDTO socksQuantityDTO) {
         socksWarehouse.put(
-                socksQuantityDTO.socks(),
-                socksWarehouse.getOrDefault(socksQuantityDTO.socks(), 0) + socksQuantityDTO.quantity()
+                socksQuantityDTO.getSocks(),
+                socksWarehouse.getOrDefault(socksQuantityDTO.getSocks(), 0) + socksQuantityDTO.getQuantity()
         );
         addSocksTransaction(
                 TransactionType.ACCEPT,
-                socksQuantityDTO.socks(),
-                socksQuantityDTO.quantity()
+                socksQuantityDTO.getSocks(),
+                socksQuantityDTO.getQuantity()
         );
-        return socksQuantityDTO.socks();
+        return socksQuantityDTO.getSocks();
     }
 
     @Override
     public SocksQuantityDTO releaseSocks(@Valid SocksQuantityDTO socksQuantityDTO,
                                          TransactionType transactionType) {
-        if (!socksWarehouse.containsKey(socksQuantityDTO.socks())) {
+        if (!socksWarehouse.containsKey(socksQuantityDTO.getSocks())) {
             throw new SocksNotExistException("No socks at warehouse.");
         }
         //SOCKS_WAREHOUSE.put(socks, SOCKS_WAREHOUSE.get(socks) > quantity ? SOCKS_WAREHOUSE.get(socks) - quantity : 0);
         socksWarehouse.put(
-                socksQuantityDTO.socks(),
-                socksWarehouse.get(socksQuantityDTO.socks()) - socksQuantityDTO.quantity()
+                socksQuantityDTO.getSocks(),
+                socksWarehouse.get(socksQuantityDTO.getSocks()) - socksQuantityDTO.getQuantity()
         );
-        addSocksTransaction(transactionType, socksQuantityDTO.socks(), socksQuantityDTO.quantity());
+        addSocksTransaction(transactionType, socksQuantityDTO.getSocks(), socksQuantityDTO.getQuantity());
         return socksQuantityDTO;
     }
 
@@ -86,9 +86,9 @@ public class SockServiceImpl implements SockService {
                                       @NotNull @Min(0) @Max(100) Integer cottonMin) {
         return socksWarehouse.entrySet().stream()
                 .filter(entry ->
-                        entry.getKey().cottonPart() >= cottonMin
-                                && entry.getKey().size() == Size.getSizeByNum(size)
-                                && entry.getKey().color() == Color.valueOf(color.toUpperCase()))
+                        entry.getKey().getCottonPart() >= cottonMin
+                                && entry.getKey().getSize() == Size.getSizeByNum(size)
+                                && entry.getKey().getColor() == Color.valueOf(color.toUpperCase()))
                 .map(Map.Entry::getValue)
                 .mapToInt(Integer::intValue)
                 .sum();
@@ -100,9 +100,9 @@ public class SockServiceImpl implements SockService {
                                       @NotNull @Min(0) @Max(100) Integer cottonMax) {
         return socksWarehouse.entrySet().stream()
                 .filter(entry ->
-                        entry.getKey().cottonPart() <= cottonMax
-                                && entry.getKey().size() == Size.getSizeByNum(size)
-                                && entry.getKey().color() == Color.valueOf(color.toUpperCase()))
+                        entry.getKey().getCottonPart() <= cottonMax
+                                && entry.getKey().getSize() == Size.getSizeByNum(size)
+                                && entry.getKey().getColor() == Color.valueOf(color.toUpperCase()))
                 .map(Map.Entry::getValue)
                 .mapToInt(Integer::intValue)
                 .sum();
@@ -118,7 +118,23 @@ public class SockServiceImpl implements SockService {
         return backupService.saveBackup(socksTransactions, transactionsFileName);
     }
 
+    @Override
+    public void downloadWarehouseBackup(MultipartFile file) {
+        socksWarehouse = backupService.downloadBackup(socksWarehouse, file, warehouseFileName).orElse(socksWarehouse);
+        //socksWarehouse.keySet().forEach(System.out::println);
+    }
+
+    @Override
+    public void downloadTransactionsBackup(MultipartFile file) {
+        socksTransactions = backupService.downloadBackup(socksTransactions, file, transactionsFileName).orElse(socksTransactions);
+    }
+
     private void addSocksTransaction(TransactionType transactionType, Socks socks, Integer quantity) {
-        socksTransactions.add(new SocksTransactions(transactionType, LocalDateTime.now(), socks, quantity));
+        socksTransactions.add(new SocksTransactions(
+                transactionType,
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm:ss")),
+                socks,
+                quantity
+        ));
     }
 }

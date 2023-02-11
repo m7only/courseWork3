@@ -1,13 +1,16 @@
 package m7.coursework3.services;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import java.nio.file.Path;
 import java.util.Optional;
 
 public interface FileService {
+    Path save(String data, Path path);
 
-    Path save(String data, String fileName);
+    Optional<String> read(Path path);
 
-    Optional<String> read(String fileName);
+    void clean(Path path);
 
-    void clean(String fileName);
+    boolean download(MultipartFile file, Path path);
 }

@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import m7.coursework3.model.Socks;
 import m7.coursework3.model.SocksQuantityDTO;
 import m7.coursework3.model.TransactionType;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -35,4 +36,8 @@ public interface SockService {
     Path saveWarehouseBackup();
 
     Path saveTransactionsBackup();
+
+    void downloadWarehouseBackup(MultipartFile file);
+
+    void downloadTransactionsBackup(MultipartFile file);
 }
