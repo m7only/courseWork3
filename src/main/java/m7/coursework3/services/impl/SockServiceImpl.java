@@ -25,15 +25,12 @@ import java.util.Map;
 @Service
 @Validated
 public class SockServiceImpl implements SockService {
-
     private final BackupService backupService;
     @Value("${warehouse.backup.file.name}")
     String warehouseFileName;
     @Value("${transactions.backup.file.name}")
     String transactionsFileName;
-
     private Map<Socks, Integer> socksWarehouse = new HashMap<>();
-
     private List<SocksTransactions> socksTransactions = new LinkedList<>();
 
     public SockServiceImpl(BackupService backupService) {
