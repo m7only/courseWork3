@@ -17,7 +17,7 @@ import java.util.List;
 public interface SockService {
     List<Socks> all();
 
-    Socks add(@Valid SocksQuantityDTO socksQuantityDTO); // post, приход
+    Socks add(@Valid SocksQuantityDTO socksQuantityDTO);
 
     SocksQuantityDTO releaseSocks(@Valid SocksQuantityDTO socksQuantityDTO,
                                   TransactionType transactionType);
@@ -27,11 +27,11 @@ public interface SockService {
 
     int getQuantityByCottonMin(@NotBlank String color,
                                @NotNull Integer size,
-                               @NotNull @Min(0) @Max(100) Integer cottonMin); // get, количество по > min
+                               @NotNull @Min(0) @Max(100) Integer cottonMin);
 
     int getQuantityByCottonMax(@NotBlank String color,
                                @NotNull Integer size,
-                               @NotNull @Min(0) @Max(100) Integer cottonMin); // get, количество < max
+                               @NotNull @Min(0) @Max(100) Integer cottonMin);
 
     Path saveWarehouseBackup();
 

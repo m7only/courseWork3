@@ -45,9 +45,6 @@ public class SocksController {
     @PutMapping
     public ResponseEntity<SocksQuantityDTO> releaseSocks(@RequestBody SocksQuantityDTO socksQuantityDTO) {
         return ResponseEntity.ok(sockService.releaseSocks(socksQuantityDTO, TransactionType.RELEASE));
-        //SocksQuantityDTO result = sockService.releaseSocks(socksQuantityDTO, TransactionType.RELEASE);
-        //return result != null ? ResponseEntity.ok(result) : ResponseEntity.notFound().build();
-        //return ResponseEntity.ok(sockService.delete(socksQuantity.socks(), socksQuantity.quantity(), TransactionType.RELEASE));
     }
 
     @Operation(summary = "Считает количество носков, содержание хлопка которых больше указанного")
@@ -71,8 +68,5 @@ public class SocksController {
     @DeleteMapping
     public ResponseEntity<SocksQuantityDTO> writeOff(@RequestBody SocksQuantityDTO socksQuantityDTO) {
         return ResponseEntity.ok(sockService.writeOff(socksQuantityDTO, TransactionType.WRITE_OF));
-        //SocksQuantityDTO result = sockService.writeOff(socksQuantityDTO, TransactionType.WRITE_OF);
-        //return result != null ? ResponseEntity.ok(result) : ResponseEntity.notFound().build();
-        //return ResponseEntity.ok(sockService.delete(socksQuantity.socks(), socksQuantity.quantity(), TransactionType.WRITE_OF));
     }
 }

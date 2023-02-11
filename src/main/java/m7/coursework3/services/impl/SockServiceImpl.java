@@ -65,7 +65,6 @@ public class SockServiceImpl implements SockService {
         if (!socksWarehouse.containsKey(socksQuantityDTO.getSocks())) {
             throw new SocksNotExistException("No socks at warehouse.");
         }
-        //SOCKS_WAREHOUSE.put(socks, SOCKS_WAREHOUSE.get(socks) > quantity ? SOCKS_WAREHOUSE.get(socks) - quantity : 0);
         socksWarehouse.put(
                 socksQuantityDTO.getSocks(),
                 socksWarehouse.get(socksQuantityDTO.getSocks()) - socksQuantityDTO.getQuantity()
@@ -121,7 +120,6 @@ public class SockServiceImpl implements SockService {
     @Override
     public void downloadWarehouseBackup(MultipartFile file) {
         socksWarehouse = backupService.downloadBackup(socksWarehouse, file, warehouseFileName).orElse(socksWarehouse);
-        //socksWarehouse.keySet().forEach(System.out::println);
     }
 
     @Override
