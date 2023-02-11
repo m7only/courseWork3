@@ -27,7 +27,7 @@ import java.nio.file.Path;
 })
 public class BackupController {
 
-    SockService sockService;
+    private final SockService sockService;
 
     public BackupController(SockService sockService) {
         this.sockService = sockService;

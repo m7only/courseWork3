@@ -7,8 +7,8 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class SocksTransactions {
-    @NotNull TransactionType transactionType;
-    @NotNull String transactionDateTime;
-    @NotNull Socks socks;
-    @NotNull Integer quantity;
+    private @NotNull TransactionType transactionType;
+    private @NotNull String transactionDateTime;
+    private @NotNull Socks socks;
+    private @NotNull Integer quantity;
 }

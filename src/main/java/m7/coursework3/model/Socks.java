@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class Socks {
-    @NotNull Color color;
-    @NotNull Size size;
-    @NotNull @Min(0) @Max(100) int cottonPart;
+    private @NotNull Color color;
+    private @NotNull Size size;
+    private @NotNull @Min(0) @Max(100) int cottonPart;
 }

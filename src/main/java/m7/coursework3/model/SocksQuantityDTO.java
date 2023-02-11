@@ -7,6 +7,6 @@ import lombok.Data;
 
 @Data
 public class SocksQuantityDTO {
-    @Valid @NotNull Socks socks;
-    @NotNull @PositiveOrZero Integer quantity;
+    private @Valid @NotNull Socks socks;
+    private @NotNull @PositiveOrZero Integer quantity;
 }
