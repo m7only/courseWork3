@@ -37,7 +37,7 @@ public interface SockService {
 
     Path saveTransactionsBackup();
 
-    void downloadWarehouseBackup(MultipartFile file);
+    void uploadWarehouseBackup(MultipartFile file);
 
-    void downloadTransactionsBackup(MultipartFile file);
+    void uploadTransactionsBackup(MultipartFile file);
 }

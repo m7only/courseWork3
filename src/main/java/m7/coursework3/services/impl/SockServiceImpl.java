@@ -115,12 +115,12 @@ public class SockServiceImpl implements SockService {
     }
 
     @Override
-    public void downloadWarehouseBackup(MultipartFile file) {
+    public void uploadWarehouseBackup(MultipartFile file) {
         socksWarehouse = backupService.downloadBackup(socksWarehouse, file, warehouseFileName).orElse(socksWarehouse);
     }
 
     @Override
-    public void downloadTransactionsBackup(MultipartFile file) {
+    public void uploadTransactionsBackup(MultipartFile file) {
         socksTransactions = backupService.downloadBackup(socksTransactions, file, transactionsFileName).orElse(socksTransactions);
     }
 
