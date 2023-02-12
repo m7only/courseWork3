@@ -27,9 +27,9 @@ import java.util.Map;
 public class SockServiceImpl implements SockService {
     private final BackupService backupService;
     @Value("${warehouse.backup.file.name}")
-    String warehouseFileName;
+    private String warehouseFileName;
     @Value("${transactions.backup.file.name}")
-    String transactionsFileName;
+    private String transactionsFileName;
     private Map<Socks, Integer> socksWarehouse = new HashMap<>();
     private List<SocksTransactions> socksTransactions = new LinkedList<>();
 

@@ -48,7 +48,7 @@ public class BackupController {
 
     @Operation(summary = "Загрузка данных по складу")
     @PostMapping(value = "/warehouse", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> uploadWarehouseBackup(@RequestParam MultipartFile file) {
+    public ResponseEntity<Void> uploadWarehouseBackup(@RequestParam MultipartFile file) {
         sockService.downloadWarehouseBackup(file);
         return ResponseEntity.ok().build();
 
@@ -69,7 +69,7 @@ public class BackupController {
 
     @Operation(summary = "Загрузка данных по транзакциям")
     @PostMapping(value = "/transactions", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> uploadTransactionsBackup(@RequestParam MultipartFile file) {
+    public ResponseEntity<Void> uploadTransactionsBackup(@RequestParam MultipartFile file) {
         sockService.downloadTransactionsBackup(file);
         return ResponseEntity.ok().build();
 
