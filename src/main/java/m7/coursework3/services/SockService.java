@@ -42,4 +42,6 @@ public interface SockService {
     void uploadTransactionsBackup(MultipartFile file);
 
     void uploadTransactions(MultipartFile file);
+
+    void addSocksTransaction(TransactionType transactionType, Socks socks, Integer quantity);
 }

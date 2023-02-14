@@ -29,7 +29,9 @@ public class SockServiceImpl implements SockService {
     @Value("${warehouse.backup.file.name}")
     private String warehouseFileName;
     @Value("${transactions.backup.file.name}")
-    private String transactionsFileName;
+    private String transactionsBackupFileName;
+    @Value("${transactions.import.file.name}")
+    private String transactionsImportFileName;
     private Map<Socks, Integer> socksWarehouse = new HashMap<>();
     private List<SocksTransactions> socksTransactions = new LinkedList<>();
 
@@ -111,7 +113,7 @@ public class SockServiceImpl implements SockService {
 
     @Override
     public Path saveTransactionsBackup() {
-        return backupService.saveBackup(socksTransactions, transactionsFileName);
+        return backupService.saveBackup(socksTransactions, transactionsBackupFileName);
     }
 
     @Override
@@ -129,23 +131,23 @@ public class SockServiceImpl implements SockService {
         socksTransactions = backupService.uploadBackupFile(
                         SocksTransactions.class,
                         file,
-                        transactionsFileName)
+                        transactionsBackupFileName)
                 .orElse(socksTransactions);
     }
+
     @Override
     public void uploadTransactions(MultipartFile file) {
-        List<SocksTransactions> tempList = backupService.uploadBackupFile(
-                        SocksTransactions.class,
-                        file,
-                        transactionsFileName)
-                .orElse(new LinkedList<>());
-        tempList.forEach(transaction -> addSocksTransaction(
-                transaction.getTransactionType(),
-                transaction.getSocks(),
-                transaction.getQuantity()
-        ));
+        String importFilePrefix = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd_MM_yyyy_hh_mm_ss_"));
+        socksTransactions.addAll(
+                backupService.uploadBackupFile(
+                                SocksTransactions.class,
+                                file,
+                                importFilePrefix + transactionsImportFileName)
+                        .orElse(new LinkedList<>()));
     }
-    private void addSocksTransaction(TransactionType transactionType, Socks socks, Integer quantity) {
+
+    @Override
+    public void addSocksTransaction(TransactionType transactionType, Socks socks, Integer quantity) {
         socksTransactions.add(new SocksTransactions(
                 transactionType,
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm:ss")),
