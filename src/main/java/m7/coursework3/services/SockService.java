@@ -40,4 +40,6 @@ public interface SockService {
     void uploadWarehouseBackup(MultipartFile file);
 
     void uploadTransactionsBackup(MultipartFile file);
+
+    void uploadTransactions(MultipartFile file);
 }

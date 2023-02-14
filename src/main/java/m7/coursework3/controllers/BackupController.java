@@ -67,10 +67,18 @@ public class BackupController {
                 : ResponseEntity.notFound().build();
     }
 
-    @Operation(summary = "Загрузка данных по транзакциям")
+    @Operation(summary = "Загрузка и замена данных по транзакциям")
     @PostMapping(value = "/transactions", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> uploadTransactionsBackup(@RequestParam MultipartFile file) {
         sockService.uploadTransactionsBackup(file);
+        return ResponseEntity.ok().build();
+
+    }
+
+    @Operation(summary = "Загрузка и добавление данных по транзакциям")
+    @PutMapping(value = "/transactions", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> uploadTransactions(@RequestParam MultipartFile file) {
+        sockService.uploadTransactions(file);
         return ResponseEntity.ok().build();
 
     }
