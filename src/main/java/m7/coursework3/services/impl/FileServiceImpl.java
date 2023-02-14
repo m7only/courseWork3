@@ -1,15 +1,15 @@
 package m7.coursework3.services.impl;
 
 import m7.coursework3.services.FileService;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
-
-import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
 @Service
 public class FileServiceImpl implements FileService {
@@ -45,19 +45,14 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public boolean download(MultipartFile file, Path path) {
+    public boolean upload(MultipartFile file, Path path) {
         try {
             Files.deleteIfExists(path);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        try (
-                InputStream is = file.getInputStream();
-                OutputStream os = Files.newOutputStream(path, CREATE_NEW);
-                BufferedInputStream bis = new BufferedInputStream(is, 1024);
-                BufferedOutputStream bos = new BufferedOutputStream(os, 1024)
-        ) {
-            bis.transferTo(bos);
+        try (FileOutputStream fos = new FileOutputStream(path.toFile())) {
+            IOUtils.copy(file.getInputStream(), fos);
             return true;
         } catch (IOException e) {
             e.printStackTrace();
