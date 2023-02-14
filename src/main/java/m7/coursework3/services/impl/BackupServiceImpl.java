@@ -18,9 +18,9 @@ import java.util.Optional;
 
 @Service
 public class BackupServiceImpl implements BackupService {
+    private final FileService fIleService;
     @Value("${path.to.backup.folder}")
     private String backupFolder;
-    private final FileService fIleService;
 
     public BackupServiceImpl(FileService fIleService) {
         this.fIleService = fIleService;
